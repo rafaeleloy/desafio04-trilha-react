@@ -1,16 +1,15 @@
-import ptBR from 'date-fns/esm/locale/pt-BR/index.js';
-import format from 'date-fns/format';
 import Head from 'next/head';
 import { FiCalendar, FiUser, FiClock } from 'react-icons/fi';
 import Prismic from '@prismicio/client';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import { RichText } from 'prismic-dom';
+import { format } from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR';
 import Header from '../../components/Header';
 
 import { getPrismicClient } from '../../services/prismic';
 
-import commonStyles from '../../styles/common.module.scss';
 import styles from './post.module.scss';
 
 interface Post {
@@ -137,8 +136,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     uid: response.uid,
     first_publication_date: response.first_publication_date,
     data: {
-      title: response.data.title,
-      subtitle: response.data.subtitle,
+      title: RichText.asText(response.data.title),
+      subtitle: response.data.subtitle ?? '',
       author: response.data.author,
       banner: {
         url: response.data.banner.url ?? '',

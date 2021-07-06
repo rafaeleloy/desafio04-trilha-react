@@ -5,6 +5,7 @@ import { GetStaticProps } from 'next';
 import { format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 import { FiCalendar, FiUser } from 'react-icons/fi';
+import { RichText } from 'prismic-dom';
 import Prismic from '@prismicio/client';
 
 import { getPrismicClient } from '../services/prismic';
@@ -50,7 +51,7 @@ export default function Home({ postsPagination }: HomeProps): JSX.Element {
           }
         ),
         data: {
-          title: post.data.title,
+          title: RichText.asText(post.data.title),
           subtitle: post.data.subtitle,
           author: post.data.author,
         },
@@ -114,6 +115,8 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const { next_page } = postsResponse;
 
+  console.table(postsResponse.results.map(p => p.data.subtitle));
+
   const posts = postsResponse.results.map(post => {
     return {
       uid: post.uid,
@@ -125,7 +128,7 @@ export const getStaticProps: GetStaticProps = async () => {
         }
       ),
       data: {
-        title: post.data.title,
+        title: RichText.asText(post.data.title),
         subtitle: post.data.subtitle,
         author: post.data.author,
       },
